@@ -21,7 +21,7 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation" >
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -33,14 +33,14 @@
 				<a class="navbar-brand" >Bug Tracking System Admin</a>
 			</div>
 			<div class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li id="mainFrameJSPNav"><a href="#">DashBoard</a></li>
+				<ul class="nav navbar-nav" id="nav">
+					<li id="mainFrameJSPNav"><a href="" class="external" >DashBoard</a></li>
 					
-					<li id="UsersNav"><a href="#">Users
+					<li id="UsersNav"><a href="#section-1" title="scroll to user table">Users
 							Info</a></li>
-					<li id="ManagedBugsNav"><a href="#">Managed Bugs
+					<li id="ManagedBugsNav"><a href="#section-2" title="scroll to managed bugs table">Managed Bugs
 							</a></li>
-					<li id="OwnedBugsNav"><a href="#">Owned Bugs
+					<li id="OwnedBugsNav"><a href="#section-3" title="scroll to owned bugs table">Owned Bugs
 							</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
@@ -51,7 +51,7 @@
 	</nav>
 
 
-	<div class="container" style="padding-top:70px">
+	<div class="container" style="padding-top:70px" id="section-1">
 		<div class="row">
 			<div id="userInfoDiv" class="col-lg-12">
 
@@ -85,7 +85,7 @@
 		</div>
 	</div>
 	
-	<div class="container" style="padding-top:70px">
+	<div class="container" style="padding-top:70px" id="section-2">
 		<div class="row">
 			<div id="managedBugDiv" class="col-lg-12">
 
@@ -122,7 +122,7 @@
 		</div>
 	</div>
 	
-	<div class="container" style="padding-top:70px">
+	<div class="container" style="padding-top:70px" id="section-3">
 		<div class="row">
 			<div id="ownedBugDiv" class="col-lg-12">
 
@@ -221,27 +221,28 @@
       </div>
       <div class="modal-body " style="margin-bottom:0px,padding-bottom:0px">
         <form id="addManagedBugForm" name="bugInfoForm" action="/BugTrackingSystemAdmin/api/managedBugs" method="post" class="well form-horizontal" style="margin-bottom:0px,padding-bottom:0px">
-				  		    <fieldset>
-				  		      <div class="form-group">
+				  		    <fieldset id="managedFiledSet">
+				  		      <div class="form-group" id="managedUser">
 					  		    <label class="control-label col-lg-3" for="userinfoId">UserName</label>
 					  		    <div class="col-lg-7">
 
-					  		    	<select id="managedUserId"  name="userinfoId" class="form-control" style="width:80%">
+					  		    	<select id="managedUserId"  name="userinfoId" class="form-control" style="width:60%">
+					  		    		
 					  		    	</select>
 					  		    </div>
 					  		</div>
     
-				  		     <div class="form-group">
+				  		     <div class="form-group" id="managedBug">
 					  		    <label class="control-label col-lg-3">BugId</label> 
 					  		   	<div class="col-lg-7">
-					  		    <input id="managedBugId" class="form-control col-lg-9" type="text" name="buginfoId" placeholder="BugId" style="width:80% "> 
+					  		    <input id="managedBugId" class="form-control col-lg-9" type="text" name="buginfoId" placeholder="BugId" style="width:60% "> 
 					  		    <button class="btn btn-primary " disabled="disabled" type="button"  id="managedBugFind"  data-loading-text="Loading..." style="margin-left:3px">Find</button>
 					  		    </div>
 				  		    </div>
 				  		    
 
 					  			
-					  			
+					  	   <div id="bugContent">		
 					  		<div class="form-group ">
 					  			<label class="control-label col-lg-3" for="title">Title </label>
 					  			
@@ -332,7 +333,7 @@
 					  			<input class="form-control" id="mangedRegression" class="btn btn-default"  readonly="true" name="regression" type="text" value=""/>
 					  			</div>
 					  		</div>
-				  		    
+				  		    </div>
 				  			</fieldset>
 						</form>
       </div>
@@ -386,6 +387,8 @@
 </div><!-- /.modal -->
 
 	<script src="assets/js/jquery-1.10.2.min.js"></script>	
+	<script src="assets/js/jquery.scrollTo.js"></script>
+	<script src="assets/js/jquery.nav.js"></script>	
 	<script src="assets/js/jquery.validate.min.js" ></script>
 	<script src="assets/js/jquery.placeholder.js" ></script>
 	<script src="assets/js/bootstrap.min.js"></script>

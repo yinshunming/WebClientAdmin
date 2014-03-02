@@ -196,7 +196,23 @@
 												
 					
 						$("#mainFrameJSPNav").addClass("active");
-
+						//one page navigation
+						$('#nav').onePageNav({
+							currentClass: 'active',
+							filter: ':not(.external)',
+							begin: function() {
+							console.log('start');
+							},
+							end: function() {
+							console.log('stop');
+							},
+						scrollOffset: 50
+						});
+						
+						//bug content hide
+						$("#bugContent").hide();
+						
+						
 						$.ajax({
 									type : "get",
 									url : "/BugTrackingSystemAdmin/api/userinfos",
@@ -648,107 +664,125 @@
 						});		
 						
 						$(document).delegate('#managedBugFind','click',function () {
+							$("#bugContent").slideToggle(500);
+							if($("#managedBugFind").html()=="Find"){
+								var bugId=$(this).parent()[0].childNodes[1].value.replace(/^(bug|BUG)?/,"");
+								//alert(bugId);
+								$('#managedBugFind').html('Loading');
+								$('#managedBugFind').prop('disabled',"true");
+								$.ajax({
+									type : "get",
+									url : "/BugTrackingSystem/api/bugs?bugId="+bugId,
+									data : "",
+									cache :false,
+									success : function(data) {
+										
+										var dataObj = data;
+										if (dataObj != null) {
+											   
+											var nullStr="(null)";	
+											if(dataObj.title){
+												 $("#managedTitle").val(dataObj.title);
+											}else {
+												$("#managedTitle").val(nullStr);
+											}
+											
+											if(dataObj.project){
+												$("#managedProject").val(dataObj.project);
+											}else {
+												$("#managedProject").val(nullStr);
+											}
+											
+											if(dataObj.component){
+												  $("#managedComponent").val(dataObj.component);
+											}else {
+												$("#managedComponent").val(nullStr);
+											}
+											
+											if(dataObj.type){
+												   $("#managedType").val(dataObj.type);
+											}else {
+												$("#managedType").val(nullStr);
+											}
+											
+											if(dataObj.status){
+												   $("#managedStatus").val(dataObj.status);
+											}else {
+												$("#managedStatus").val(nullStr);
+											}
+											
+											dataObj.description=dataObj.description.replace(/<br ?\/?>/g, "\n");
+											 
+											if(dataObj.description){
+												  $("#managedDescription").val(dataObj.description);
+											}else {
+												$("#managedDescription").val(nullStr);
+											}
+											
+											if(dataObj.owner){
+												$("#managedOwner").val(dataObj.owner);
+											}else {
+												$("#managedOwner").val(nullStr);
+											}
+											
+											if(dataObj.submitter){
+												$("#managedSubmitter").val(dataObj.submitter);
+											}else {
+												$("#managedSubmitter").val(nullStr);
+											}
+											
+											if(dataObj.submitData){
+												$("#managedSubmitData").val(dataObj.submitData);
+											}else {
+												$("#managedSubmitData").val(nullStr);
+											}
+											
+											if(dataObj.severity){
+												$("#managedSeverity").val(dataObj.severity);
+											}else {
+												$("#managedSeverity").val(nullStr);
+											}
+											
+											if(dataObj.tags){
+												 $("#managedTags").val(dataObj.tags);
+											}else {
+												$("#managedTags").val(nullStr);
+											}
+											
+											if(dataObj.regression){
+												 $("#mangedRegression").val(dataObj.regression);
+											}else {
+												$("#mangedRegression").val(nullStr);
+											}
+											   
+											} 
+										alertify.log( "Get bug info successed!" ,"success");
+									},
+									error: function(data){
+										alertify.log( "Get bug info failed!" ,"error");
+									},
+									complete : function(status){
+										$('#managedBugFind').removeAttr('disabled');
+										$('#managedBugFind').html('Hide');
+									}
+								});
+								
+							}else {
+								$('#managedBugFind').html("Find");
+							}
 							
-							var bugId=$(this).parent()[0].childNodes[1].value.replace(/^(bug|BUG)?/,"");
-							//alert(bugId);
-							//$('#managedBugFind').button('loading');
-							$.ajax({
-								type : "get",
-								url : "/BugTrackingSystem/api/bugs?bugId="+bugId,
-								data : "",
-								cache :false,
-								success : function(data) {
-									
-									var dataObj = data;
-									if (dataObj != null) {
-										   
-										var nullStr="(null)";	
-										if(dataObj.title){
-											 $("#managedTitle").val(dataObj.title);
-										}else {
-											$("#managedTitle").val(nullStr);
-										}
-										
-										if(dataObj.project){
-											$("#managedProject").val(dataObj.project);
-										}else {
-											$("#managedProject").val(nullStr);
-										}
-										
-										if(dataObj.component){
-											  $("#managedComponent").val(dataObj.component);
-										}else {
-											$("#managedComponent").val(nullStr);
-										}
-										
-										if(dataObj.type){
-											   $("#managedType").val(dataObj.type);
-										}else {
-											$("#managedType").val(nullStr);
-										}
-										
-										if(dataObj.status){
-											   $("#managedStatus").val(dataObj.status);
-										}else {
-											$("#managedStatus").val(nullStr);
-										}
-										
-										dataObj.description=dataObj.description.replace(/<br ?\/?>/g, "\n");
-										 
-										if(dataObj.description){
-											  $("#managedDescription").val(dataObj.description);
-										}else {
-											$("#managedDescription").val(nullStr);
-										}
-										
-										if(dataObj.owner){
-											$("#managedOwner").val(dataObj.owner);
-										}else {
-											$("#managedOwner").val(nullStr);
-										}
-										
-										if(dataObj.submitter){
-											$("#managedSubmitter").val(dataObj.submitter);
-										}else {
-											$("#managedSubmitter").val(nullStr);
-										}
-										
-										if(dataObj.submitData){
-											$("#managedSubmitData").val(dataObj.submitData);
-										}else {
-											$("#managedSubmitData").val(nullStr);
-										}
-										
-										if(dataObj.severity){
-											$("#managedSeverity").val(dataObj.severity);
-										}else {
-											$("#managedSeverity").val(nullStr);
-										}
-										
-										if(dataObj.tags){
-											 $("#managedTags").val(dataObj.tags);
-										}else {
-											$("#managedTags").val(nullStr);
-										}
-										
-										if(dataObj.regression){
-											 $("#mangedRegression").val(dataObj.regression);
-										}else {
-											$("#mangedRegression").val(nullStr);
-										}
-										   
-										} 
-								},
-								complete : function(status){
-									$('#managedBugFind').button('reset');
-								}
-							});
+							
 							
 						});
 						
 						
 						$(document).delegate('#addManagedBugBtn','click',function () {
-							
+							var userinfoId='<label class="control-label col-lg-3" for="userinfoId">UserName</label><div class="col-lg-7"><select id="managedUserId"  name="userinfoId" class="form-control" style="width:60%"></select></div>';
+							var managebugId='<label class="control-label col-lg-3">BugId</label><div class="col-lg-7"><input id="managedBugId" class="form-control col-lg-9" type="text" name="buginfoId" placeholder="BugId" style="width:60% "><button class="btn btn-primary " disabled="disabled" type="button"  id="managedBugFind"  data-loading-text="Loading..." style="margin-left:3px">Find</button></div>';
+							$("#managedUser").html(userinfoId)
+							$("#managedBug").html(managebugId);
+							$("#managedUser").removeClass('has-success');
+							$("#managedBug").removeClass('has-success').removeClass('has-error');
 							$("#managedBugFind").prop("disabled","true");
 							$("#managedTitle").val("");
 							$("#managedProject").val("");
@@ -770,6 +804,7 @@
 										success : function(data) {
 											
 											var dataObj = data;
+											//$("#managedUserId")
 											$.each(dataObj,
 															function(i, userInfo) {
 																$("#managedUserId").append('<option value='+userInfo.id+'>'+userInfo.username+'</option>');
