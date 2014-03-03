@@ -100,8 +100,8 @@
 		    });
 		   	
     		$.ajax({
-				type : "post",
-				url : "/BugTrackingSystemAdmin/api/userinfo?method=put&id="+id+"&username="+username+"&password="+password+"&oneBugFullName="+onebugfullname+"&email="+email,
+				type : "put",
+				url : "/BugTrackingSystemAdmin/api/userinfo?id="+id+"&username="+username+"&password="+password+"&oneBugFullName="+onebugfullname+"&email="+email,
 				success : function(data) {
 						 alertify.log(data,"success");
 			    		// alert(data) ;  
@@ -114,7 +114,7 @@
 		   var  id=tr[0].childNodes[0].childNodes[0].data;
 		   $.ajax({
 				type : "delete",
-				url : "/BugTrackingSystemAdmin/api/userinfo?method=delete&id="+id,
+				url : "/BugTrackingSystemAdmin/api/userinfo?id="+id,
 				success : function(data) {
 						 alertify.log(data,"success");
 			    		// alert(data) ;  
@@ -127,7 +127,7 @@
 		   var  id=tr[0].childNodes[0].childNodes[0].data;
 		   $.ajax({
 				type : "delete",
-				url : "/BugTrackingSystemAdmin/api/userinfo?method=delete&id="+id,
+				url : "/BugTrackingSystemAdmin/api/userinfo?id="+id,
 				success : function(data) {
 						 alertify.log(data,"success");
 			    		// alert(data) ;  
@@ -154,7 +154,7 @@
    		
 		   $.ajax({
 				type : "delete",
-				url : "/BugTrackingSystemAdmin/api/managedBugs?method=delete&id="+id,
+				url : "/BugTrackingSystemAdmin/api/managedBugs?id="+id,
 				success : function(data) {
 						 alertify.log(data,"success");
 			    		// alert(data) ;  
@@ -181,7 +181,7 @@
    		
 		   $.ajax({
 				type : "delete",
-				url : "/BugTrackingSystemAdmin/api/ownerBugs?method=delete&id="+id,
+				url : "/BugTrackingSystemAdmin/api/ownerBugs?id="+id,
 				success : function(data) {
 						 alertify.log(data,"success");
 			    		// alert(data) ;  
@@ -664,9 +664,9 @@
 						});		
 						
 						$(document).delegate('#managedBugFind','click',function () {
-							$("#bugContent").slideToggle(500);
+							
 							if($("#managedBugFind").html()=="Find"){
-								var bugId=$(this).parent()[0].childNodes[1].value.replace(/^(bug|BUG)?/,"");
+								var bugId=$(this).parent()[0].childNodes[0].value.replace(/^(bug|BUG)?/,"");
 								//alert(bugId);
 								$('#managedBugFind').html('Loading');
 								$('#managedBugFind').prop('disabled',"true");
@@ -676,7 +676,7 @@
 									data : "",
 									cache :false,
 									success : function(data) {
-										
+										$("#bugContent").slideToggle(500);
 										var dataObj = data;
 										if (dataObj != null) {
 											   
@@ -769,6 +769,7 @@
 								
 							}else {
 								$('#managedBugFind').html("Find");
+								$("#bugContent").slideToggle(500);
 							}
 							
 							
@@ -831,7 +832,9 @@
 						var addUserForm = $("#addUserForm");
 
 						
-						addUserForm.validate({
+						addUserForm.submit(function(e){
+							e.preventDefault();
+						}).validate({
 							ignore: [],
 							rules: {
 								username : {
@@ -850,7 +853,7 @@
 								}
 							}, 
 							 submitHandler: function(form) {
-								 addUserOkBtn.button('loading');
+								 //addUserOkBtn.button('loading');
 									$.ajax({
 										type: addUserForm.attr('method'),
 										url: addUserForm.attr('action'),
@@ -863,13 +866,14 @@
 											window.location.reload();
 										},
 										error : function(XMLHttpRequest, textStatus, errorThrown) {
-											
+											alertify.log("submit user info failed","error");
 										},
 										
 										complete: function (XMLHttpRequest, textStatus) {
 											addUserOkBtn.button('reset');
 										}
 									});	
+								return false;
 							},
 							highlight: function(element) {
 								$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -886,7 +890,9 @@
 						
 						var addManagedBugForm = $("#addManagedBugForm");
 						
-						addManagedBugForm.validate({
+						addManagedBugForm.submit(function(e){
+							e.preventDefault();
+						}).validate({
 							ignore: [],
 							rules: {
 								buginfoId : {
@@ -898,17 +904,17 @@
 								}
 							}, 
 							 submitHandler: function(form) {
-								 addManagedBugOkBtn.button('loading');
+								// addManagedBugOkBtn.button('loading');
 								 var userInfoId=$("#managedUserId").val();
 								 var bugInfoId=$("#managedBugId").val();
-								 alert("userInfo"+userInfoId);
-								 alert("bugInfo"+bugInfoId);
+								// alert("userInfo"+userInfoId);
+								// alert("bugInfo"+bugInfoId);
 								 
 								$.ajax({
 									type: addManagedBugForm.attr('method'),
-									//url: addManagedBugForm.attr('action')+"?userinfoId="+userInfoId+"&buginfoId="+bugInfoId,
-									url: addManagedBugForm.attr('action'),
-									data: addUserForm.serialize(),
+									url: addManagedBugForm.attr('action')+"?userinfoId="+userInfoId+"&buginfoId="+bugInfoId,
+									//url: addManagedBugForm.attr('action'),
+									//data: addManagedBugForm.serialize(),
 									cache : false,
 									success: function (data) {
 										var dataObj = data;
@@ -917,7 +923,7 @@
 										window.location.reload();
 									},
 									error : function(XMLHttpRequest, textStatus, errorThrown) {
-										
+										alertify.log("submit manage bug info failed","error");
 									},
 									
 									complete: function (XMLHttpRequest, textStatus) {
