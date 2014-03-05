@@ -30,7 +30,7 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" >Bug Tracking System Admin</a>
+				<a class="navbar-brand" >Bug Tracker  Admin</a>
 			</div>
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav" id="nav">

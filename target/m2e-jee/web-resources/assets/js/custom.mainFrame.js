@@ -351,7 +351,61 @@
 										record.push(userInfo.email);
 										 userInfoList.push(record);
 									});
-					userInfoDataTable.fnAddData (userInfoList);			
+					userInfoDataTable.fnAddData (userInfoList);		
+					
+					 userInfoDataTable.makeEditable({
+						 
+						 "aoColumns": [
+							              null,
+							              {
+							            	  cssclass:"required",
+							            	  indicator: 'Saving Username...',
+											  tooltip: 'Double click to modify user Name',
+											  loadtext: 'loading...',
+											 // type: 'text',
+											  onblur: 'submit',
+											  sUpdateURL: updateUserInfo,
+							              	},
+							              	{
+							             
+							            	  cssclass:"required minlength",
+							            	  indicator: 'Saving Password...',
+											  tooltip: 'Double click to modify password',
+											  loadtext: 'loading...',
+											 // type: 'text',
+											  onblur: 'submit',
+											  sUpdateURL: updateUserInfo,
+							              	},
+							              	{
+								            	  cssclass:"required",
+								            	  indicator: 'Saving Username...',
+												  tooltip: 'Double click to modify onebug full name',
+												  loadtext: 'loading...',
+												 // type: 'text',
+												  onblur: 'submit',
+												  sUpdateURL: updateUserInfo,
+							              	},
+							              	{
+								            	  cssclass:"required email",
+								            	  indicator: 'Saving Username...',
+												  tooltip: 'Double click to modify email',
+												  loadtext: 'loading...',
+												 // type: 'text',
+												  onblur: 'submit',
+												  sUpdateURL: updateUserInfo,
+								             }		
+							              	
+							              ],
+			            sDeleteHttpMethod: "GET",
+                 		sDeleteURL: "assets/other/blank.txt",
+                 		fnOnDeleting: deleteUserInfo,
+		                sDeleteRowButtonId: "deleteUserBtn",	
+						oDeleteRowButtonOptions: {	
+							label: "Remove", 
+							icons: {primary:'ui-icon-trash'}
+						},							                
+		                sAddDeleteToolbarSelector: "#userInfoTable_length"
+					}); 
 
 				},
 				
@@ -795,7 +849,7 @@
 				$('#managedBugFind').prop('disabled',"true");
 				$.ajax({
 					type : "get",
-					url : "/BugTrackingSystem/api/bugs?bugId="+bugId,
+					url : "/BugTrackingSystemAdmin/api/buginfo?bugId="+bugId,
 					data : "",
 					cache :false,
 					success : function(data) {
@@ -921,6 +975,7 @@
 			$("#managedSeverity").val("");
 			$("#managedTags").val("");
 			$("#mangedRegression").val("");
+			$("#bugContent").hide();
 			$.ajax({
 						type : "get",
 						url : "/BugTrackingSystemAdmin/api/userinfos",
@@ -947,7 +1002,8 @@
 	   
 	   function addUserFormValidate(){
 		   addUserForm.submit(function(e){
-				e.preventDefault();
+				//e.preventDefault();
+			   return false;
 			}).validate({
 				ignore: [],
 				rules: {
@@ -1012,7 +1068,8 @@
 	   
 	   function addManageFormValidate(){
 		   addManagedBugForm.submit(function(e){
-				e.preventDefault();
+				//e.preventDefault();
+			   return false;
 			}).validate({
 				ignore: [],
 				rules: {
