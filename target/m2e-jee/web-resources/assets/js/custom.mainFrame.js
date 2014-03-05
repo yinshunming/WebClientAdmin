@@ -225,7 +225,7 @@
 					$.each(dataObj,
 									function(i, userInfo) {
 										var record = [];
-										//record.push(userInfo.id);
+										record.push(userInfo.id);
 										record.push(userInfo.username);
 										record.push(userInfo.password);
 										record.push(userInfo.oneBugFullName);
@@ -241,7 +241,7 @@
 						"sPaginationType": "full_numbers",
 						"aaData": userInfoList,
 						"aoColumns": [
-				           /* { sWidth: '10%' },*/
+				            { sWidth: '10%' },
 				            { sWidth: '20%' },
 				            { sWidth: '25%' },
 				            { sWidth: '25%' },
@@ -325,9 +325,40 @@
 					var addButton='<button data-toggle="modal" data-target="#addUserModal"  id="addUserBtn" class="add_row ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false"><span class="ui-button-icon-primary ui-icon ui-icon-plus"></span><span class="ui-button-text">Add...</span></button>';
 					$(addButton).insertBefore("#deleteUserBtn");
 				}
-	});
+			});
 	   }
 	
+	   
+	   function updateUsersInfo(){
+		   userInfoDataTable.fnClearTable();
+		   userInfoDataTable.fnDraw();
+			$.ajax({
+				type : "get",
+				url : "/BugTrackingSystemAdmin/api/userinfos",
+				data : "",
+				cache :false,
+				success : function(data) {
+					
+					var dataObj = data;
+					var  userInfoList=[];
+					$.each(dataObj,
+									function(i, userInfo) {
+										var record = [];
+										record.push(userInfo.id);
+										record.push(userInfo.username);
+										record.push(userInfo.password);
+										record.push(userInfo.oneBugFullName);
+										record.push(userInfo.email);
+										 userInfoList.push(record);
+									});
+					userInfoDataTable.fnAddData (userInfoList);			
+
+				},
+				
+			});
+	   }
+	   
+	   
 	   function loadManagedBugs(){
 			$.ajax({
 				type : "get",
@@ -944,16 +975,17 @@
 							cache : false,
 							success: function (data) {
 								var dataObj = data;
+								updateUsersInfo();
 								alertify.log(dataObj,"success");
 								//alert(dataObj);
 								//window.location.reload();
 								//fake data
-								var rowArray=addUserForm.serializeArray();
+								/*var rowArray=addUserForm.serializeArray();
 								var userName=rowArray[0].value;
 								var password=rowArray[1].value;
 								var oneBugName=rowArray[2].value;
 								var email=rowArray[3].value;
-								userInfoDataTable.fnAddData([userName,password,oneBugName,email]);
+								userInfoDataTable.fnAddData([userName,password,oneBugName,email]);*/
 								$("#addUserModal").modal('hide');
 							},
 							error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -1050,6 +1082,11 @@
 			});
 	   }
 	   
+	   
+	   function logoutClick(){
+		   window.location.href = "http://logout:logout@" + location.hostname + ":" + location.port + "/WebClientAdmin/mainFrame.jsp";
+	   }
+	   
 	   $(document).ready(
 					function() {
 												
@@ -1065,6 +1102,7 @@
 						$(document).delegate('#managedBugFind','click',managedBugFindBtnClick);
 						$(document).delegate('#addManagedBugBtn','click',addManagedBugBtnClick);		
 						$(document).delegate('#addNewOwnedBugBtn','click',addOwnedBugBtnClick);	
+						$(document).delegate('#logoutNav','click',logoutClick);	
 						
 						addUserFormValidate();
 						addManageFormValidate();
