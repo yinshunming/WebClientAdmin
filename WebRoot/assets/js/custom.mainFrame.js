@@ -1,6 +1,9 @@
 	var userInfoDataTable;
 	var managedBugDataTable;
 	var ownedBugDataTable;
+	var userInfoTimer;
+	var managedBugTimer;
+	var ownerBugTimer;
 	var addUserOkBtn = $("#userInfoFormSb");
 	var addUserForm = $("#addUserForm");
 	var addManagedBugOkBtn = $("#managedBugFormSb");
@@ -34,6 +37,18 @@
 	        return nRow;
 	    }
 	    
+	    var update_size = function() {
+	        $(userInfoDataTable).css({ width: $(userInfoDataTable).parent().width() });
+	        userInfoDataTable.fnAdjustColumnSizing();  
+	        $(managedBugDataTable).css({ width: $(managedBugDataTable).parent().width() });
+	        managedBugDataTable.fnAdjustColumnSizing();  
+	        $(ownedBugDataTable).css({ width: $(ownedBugDataTable).parent().width() });
+	        ownedBugDataTable.fnAdjustColumnSizing(); 
+	      }
+	    function windowResize (){
+	    	 clearTimeout(window.refresh_size);
+			 window.refresh_size = setTimeout(function() { update_size(); }, 150);
+	    }
 	    function  getBugInfoTable(bugInfo){
 			var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
 			sOut += '<tr><td>Component:</td><td>'+bugInfo.component+'</td></tr>';
@@ -1031,18 +1046,15 @@
 							cache : false,
 							success: function (data) {
 								var dataObj = data;
-								updateUsersInfo();
-								alertify.log(dataObj,"success");
-								//alert(dataObj);
-								//window.location.reload();
-								//fake data
-								/*var rowArray=addUserForm.serializeArray();
+								var id= dataObj.id;
+								var rowArray=addUserForm.serializeArray();
 								var userName=rowArray[0].value;
 								var password=rowArray[1].value;
 								var oneBugName=rowArray[2].value;
 								var email=rowArray[3].value;
-								userInfoDataTable.fnAddData([userName,password,oneBugName,email]);*/
+								userInfoDataTable.fnAddData([id,userName,password,oneBugName,email]);
 								$("#addUserModal").modal('hide');
+								alertify.log(dataObj.message,"success");
 							},
 							error : function(XMLHttpRequest, textStatus, errorThrown) {
 								alertify.log("submit user info failed","error");
@@ -1144,6 +1156,52 @@
 		   window.location.href = "http://logout:logout@" + location.hostname + ":" + location.port + "/WebClientAdmin/mainFrame.jsp";
 	   }
 	   
+	   function searchUserInfo(){
+			clearInterval(userInfoTimer);  
+			if($('#userInfoTableBody  tr td').hasHightlight()){
+				  $('#userInfoTableBody  tr td').removeHighlight();
+			 }
+			
+	        if ($(this).val() != "") {
+	            $('#userInfoTableBody tr td').highlight($(this).val());
+	        }else {
+	        	$('#userInfoTableBody  tr td').removeHighlight();
+	        }
+	        
+	        userInfoTimer = setTimeout(function(){
+	            $('#userInfoTableBody  tr td').removeHighlight();}, 1000);
+	   }
+	   
+	   function searchMangedBug(){
+			clearInterval(managedBugTimer);  
+			if($('#managedBugsTableBody  tr td').hasHightlight()){
+				  $('#managedBugsTableBody  tr td').removeHighlight();
+			 }
+			
+	        if ($(this).val() != "") {
+	            $('#managedBugsTableBody  tr td').highlight($(this).val());
+	        }else {
+	        	$('#managedBugsTableBody  tr td').removeHighlight();
+	        }
+	        
+	        managedBugTimer = setTimeout(function(){
+	            $('#managedBugsTableBody tr td').removeHighlight();}, 1000);
+	   }
+	   function searchOwnedBug (){
+			clearInterval(ownerBugTimer);  
+			if($('#ownedBugsTableBody  tr td').hasHightlight()){
+				  $('#ownedBugsTableBody  tr td').removeHighlight();
+			 }
+			
+	        if ($(this).val() != "") {
+	            $('#ownedBugsTableBody  tr td').highlight($(this).val());
+	        }else {
+	        	$('#ownedBugsTableBody  tr td').removeHighlight();
+	        }
+	        
+	        ownerBugTimer = setTimeout(function(){
+	            $('#ownedBugsTableBody tr td').removeHighlight();}, 1000);
+	   }
 	   $(document).ready(
 					function() {
 												
@@ -1163,8 +1221,12 @@
 						
 						addUserFormValidate();
 						addManageFormValidate();
+						$(window).resize(windowResize);
+						$(document).delegate('#userInfoTable_filter input','keyup',searchUserInfo );
 						
+						$(document).delegate('#managedBugsTable_filter input','keyup',searchMangedBug);
 						
+						$(document).delegate('#ownedBugsTable_filter input','keyup',searchOwnedBug);
 			});
 		
 														

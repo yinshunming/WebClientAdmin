@@ -85,7 +85,7 @@
 		</div>
 	</div>
 	
-	<div class="container" style="padding-top:70px" id="section-2">
+	<div class="container"  id="section-2">
 		<div class="row">
 			<div id="managedBugDiv" class="col-lg-12">
 
@@ -122,7 +122,7 @@
 		</div>
 	</div>
 	
-	<div class="container" style="padding-top:70px" id="section-3">
+	<div class="container" id="section-3">
 		<div class="row">
 			<div id="ownedBugDiv" class="col-lg-12">
 
@@ -392,6 +392,7 @@
 	<script src="assets/js/jquery.validate.min.js" ></script>
 	<script src="assets/js/jquery.placeholder.js" ></script>
 	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/jquery.highlight-4.js"></script>
 	<script src="assets/js/jquery.dataTables.js"></script>
 	<script src="assets/js/jquery.dataTables.editable.js"></script>
 	<script src="assets/js/jquery.jeditable.js"></script>
