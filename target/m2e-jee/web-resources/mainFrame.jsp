@@ -400,7 +400,7 @@
 	<script src="assets/js/jquery.dataTables.colReorderWithResize.js"></script>
 	<script src="assets/js/jquery-ui-1.10.4.custom.js"></script>	
 	<script src="assets/js/alertify.min.js"></script>
-	<script src="assets/js/custom.navigation.js"></script>
+	<!-- <script src="assets/js/custom.navigation.js"></script> -->
 	<script src="assets/js/custom.mainFrame.js"></script>
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>

@@ -8,6 +8,14 @@
 	var addUserForm = $("#addUserForm");
 	var addManagedBugOkBtn = $("#managedBugFormSb");
 	var addManagedBugForm = $("#addManagedBugForm");
+	$.validator.addMethod(
+	        "regex",
+	        function(value, element, regexp) {
+	            var re = new RegExp(regexp);
+	            return this.optional(element) || re.test(value);
+	        },
+	        "Please check your input."
+		);
 	
 	 function ellipsis(text, n) {
 		    if(text.length>n)
@@ -949,13 +957,15 @@
 							   
 							} 
 						alertify.log( "Get bug info successed!" ,"success");
+						$('#managedBugFind').html('Hide');
 					},
 					error: function(data){
 						alertify.log( "Get bug info failed!" ,"error");
+						$('#managedBugFind').html('Find');
 					},
 					complete : function(status){
 						$('#managedBugFind').removeAttr('disabled');
-						$('#managedBugFind').html('Hide');
+						
 					}
 				});
 				
@@ -1016,6 +1026,8 @@
 	   }
 	   
 	   function addUserFormValidate(){
+
+		   
 		   addUserForm.submit(function(e){
 				//e.preventDefault();
 			   return false;
@@ -1079,6 +1091,7 @@
 	   }
 	   
 	   function addManageFormValidate(){
+
 		   addManagedBugForm.submit(function(e){
 				//e.preventDefault();
 			   return false;
@@ -1144,7 +1157,9 @@
 					element
 					.text('OK!').addClass('valid')
 					.closest('.form-group').removeClass('has-error').addClass('has-success');
-					$("#managedBugFind").removeAttr('disabled');
+					if(element.closest('.form-group').attr('id')=="managedBug"){
+						$("#managedBugFind").removeAttr('disabled');
+					}
 					element.remove();
 				},
 
