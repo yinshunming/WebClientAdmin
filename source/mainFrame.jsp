@@ -61,7 +61,7 @@
 
 
 				<div class="col-lg-4">
-					<h3>UserList</h3>
+					<h3>Users Info</h3>
 				</div>
 
 				<div>
@@ -95,7 +95,7 @@
 
 
 				<div class="col-lg-4">
-					<h3>ManagedBugs</h3>
+					<h3>Managed Bugs</h3>
 				</div>
 
 				<div>
@@ -132,7 +132,7 @@
 
 
 				<div class="col-lg-4">
-					<h3>OwnedBugs</h3>
+					<h3>Owned Bugs</h3>
 				</div>
 
 				<div>
