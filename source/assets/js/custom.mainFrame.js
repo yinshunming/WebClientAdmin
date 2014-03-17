@@ -457,24 +457,24 @@
 												+ " style='text-decoration : none ' onclick='return false'>"
 												+ managedBug.buginfo.bugId
 												+ "</a>");
-										record.push("<a href='http://onebug.citrite.net/tmtrack/tmtrack.dll?IssuePage&RecordId="
+										record.push("<div class='outer'> <div class='inner'> <a href='http://onebug.citrite.net/tmtrack/tmtrack.dll?IssuePage&RecordId="
 																+ managedBug.buginfo.bugId
 																+ "&Template=view&TableId=1000' target='view_window' title='"
 																+managedBug.buginfo.title+"'>"
 																+ managedBug.buginfo.title
-																+ "</a>");
+																+ "</a> </div> </div>");
 										record.push(managedBug.userinfo.username);
-										record.push(managedBug.buginfo.project);
-										record.push(managedBug.buginfo.component);
-										record.push(managedBug.buginfo.owner);
-										record.push("<label id=label_status_" + managedBug.buginfo.id + ">"
+										record.push("<div class='outer'> <div class='inner'>"+managedBug.buginfo.project+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'>"+managedBug.buginfo.component+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'>"+managedBug.buginfo.owner+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'><label id=label_status_" + managedBug.buginfo.id + ">"
 												+ managedBug.buginfo.status
-												+ "</label>");
+												+ "</label></div> </div>");
 										managedBugsList.push(record);
 									});
 								
 					managedBugDataTable = $('#managedBugsTable').dataTable( {
-						//"sDom": 'R<C>H<"clear"><"ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip>',
+						"sDom": 'R<C>H<"clear"><"ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip>',
 						//"bProcessing": true,
 						//"aaSorting": [[1, 'asc']],
 						"bDestroy": true,
@@ -487,15 +487,25 @@
 						"aaData": managedBugsList,
 						"aoColumns": [
 							            { sWidth: '5%'  },
-							            { sWidth: '10%' },
-							            { sWidth: '39%' },
+							            { sWidth: '5%' },
+							            { sWidth: '42%' },
 							            { sWidth: '1%' ,
 							            "bVisible":    false },
-							            { sWidth: '10%' },
-							            { sWidth: '15%' },
-							            { sWidth: '10%' },
+							            { sWidth: '12%' },
+							            { sWidth: '13%' },
+							            { sWidth: '12%' },
 							            { sWidth: '10%' }
-							        ]
+							        ],
+				        fnInitComplete: function ( oSettings )
+			            {
+				        	$('#managedBugsTable tbody td div.inner').each(function(index){
+							    $this = $(this);
+							    var titleVal = $this.text();
+							    if (titleVal != '') {
+							      $this.attr('title', titleVal);
+							    }
+							  });	
+			            }
 					});	
 					
 					managedBugDataTable.rowGrouping({
@@ -575,19 +585,19 @@
 												+ " style='text-decoration : none ' onclick='return false'>"
 												+ managedBug.buginfo.bugId
 												+ "</a>");
-										record.push("<a href='http://onebug.citrite.net/tmtrack/tmtrack.dll?IssuePage&RecordId="
+										record.push("<div class='outer'> <div class='inner'><a href='http://onebug.citrite.net/tmtrack/tmtrack.dll?IssuePage&RecordId="
 																+ managedBug.buginfo.bugId
 																+ "&Template=view&TableId=1000' target='view_window' title='"
 																+managedBug.buginfo.title+"'>"
 																+ managedBug.buginfo.title
-																+ "</a>");
+																+ "</a></div> </div>");
 										record.push(managedBug.userinfo.username);
-										record.push(managedBug.buginfo.project);
-										record.push(managedBug.buginfo.component);
-										record.push(managedBug.buginfo.owner);
-										record.push("<label id=label_status_" + managedBug.buginfo.id + ">"
+										record.push("<div class='outer'> <div class='inner'>"+managedBug.buginfo.project+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'>"+managedBug.buginfo.component+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'>"+managedBug.buginfo.owner+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'><label id=label_status_" + managedBug.buginfo.id + ">"
 												+ managedBug.buginfo.status
-												+ "</label>");
+												+ "</label></div> </div>");
 										managedBugsList.push(record);
 									});
 								
@@ -617,24 +627,24 @@
 												+ " style='text-decoration : none ' onclick='return false'>"
 												+ ownedBug.buginfo.bugId
 												+ "</a>");
-										record.push("<a href='http://onebug.citrite.net/tmtrack/tmtrack.dll?IssuePage&RecordId="
+										record.push("<div class='outer'> <div class='inner'><a href='http://onebug.citrite.net/tmtrack/tmtrack.dll?IssuePage&RecordId="
 																+ ownedBug.buginfo.bugId
 																+ "&Template=view&TableId=1000' target='view_window' title='"
 																+ownedBug.buginfo.title+"'>"
 																+ ownedBug.buginfo.title
-																+ "</a>");
+																+ "</a></div> </div>");
 										record.push(ownedBug.userinfo.username);
-										record.push(ownedBug.buginfo.project);
-										record.push(ownedBug.buginfo.component);
-										record.push(ownedBug.buginfo.owner);
-										record.push("<label id=label_status_" + ownedBug.buginfo.id + ">"
+										record.push("<div class='outer'> <div class='inner'>"+ownedBug.buginfo.project+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'>"+ownedBug.buginfo.component+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'>"+ownedBug.buginfo.owner+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'><label id=label_status_" + ownedBug.buginfo.id + ">"
 												+ ownedBug.buginfo.status
-												+ "</label>");
+												+ "</label></div> </div>");
 										ownedBugsList.push(record);
 									});
 								
 					ownedBugDataTable = $('#ownedBugsTable').dataTable( {
-						//"sDom": 'R<C>H<"clear"><"ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip>',
+						"sDom": 'R<C>H<"clear"><"ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip>',
 						//"bProcessing": true,
 						//"aaSorting": [[1, 'asc']],
 						"bDestroy": true,
@@ -647,15 +657,25 @@
 						"aaData": ownedBugsList,
 						"aoColumns": [
 							            { sWidth: '5%'  },
-							            { sWidth: '10%' },
-							            { sWidth: '39%' },
+							            { sWidth: '5%' },
+							            { sWidth: '42%' },
 							            { sWidth: '1%' ,
 							            "bVisible":    false },
-							            { sWidth: '10%' },
-							            { sWidth: '15%' },
-							            { sWidth: '10%' },
+							            { sWidth: '12%' },
+							            { sWidth: '13%' },
+							            { sWidth: '12%' },
 							            { sWidth: '10%' }
-							        ]
+							        ],
+				        fnInitComplete: function ( oSettings )
+			            {
+				        	$('#ownedBugsTable tbody td div.inner').each(function(index){
+							    $this = $(this);
+							    var titleVal = $this.text();
+							    if (titleVal != '') {
+							      $this.attr('title', titleVal);
+							    }
+							  });	
+			            }							     
 					});	
 					
 					ownedBugDataTable.rowGrouping({
@@ -737,19 +757,19 @@
 												+ " style='text-decoration : none ' onclick='return false'>"
 												+ ownedBug.buginfo.bugId
 												+ "</a>");
-										record.push("<a href='http://onebug.citrite.net/tmtrack/tmtrack.dll?IssuePage&RecordId="
+										record.push("<div class='outer'> <div class='inner'><a href='http://onebug.citrite.net/tmtrack/tmtrack.dll?IssuePage&RecordId="
 																+ ownedBug.buginfo.bugId
 																+ "&Template=view&TableId=1000' target='view_window' title='"
 																+ownedBug.buginfo.title+"'>"
 																+ ownedBug.buginfo.title
-																+ "</a>");
+																+ "</a></div> </div>");
 										record.push(ownedBug.userinfo.username);
-										record.push(ownedBug.buginfo.project);
-										record.push(ownedBug.buginfo.component);
-										record.push(ownedBug.buginfo.owner);
-										record.push("<label id=label_status_" + ownedBug.buginfo.id + ">"
+										record.push("<div class='outer'> <div class='inner'>"+ownedBug.buginfo.project+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'>"+ownedBug.buginfo.component+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'>"+ownedBug.buginfo.owner+" </div> </div>");
+										record.push("<div class='outer'> <div class='inner'><label id=label_status_" + ownedBug.buginfo.id + ">"
 												+ ownedBug.buginfo.status
-												+ "</label>");
+												+ "</label></div> </div>");
 										ownedBugsList.push(record);
 									});
 								

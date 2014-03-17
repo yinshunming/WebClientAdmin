@@ -1228,7 +1228,41 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .placeholder { color: #aaa; }
 .highlight { 
    background-color: yellow
+}
+.dataTable td div.inner {
+  position: absolute;
+  white-space: nowrap;
+  width: 100%;                  /* IE6 needs to define width */
+  overflow: hidden;             
+  -o-text-overflow: ellipsis;   /*  Opera */
+  text-overflow:    ellipsis;   /*  IE, Safari (WebKit) */
+}
+.dataTable td div.outer {
+  position: relative;
+}
 
+.dataTable>tbody>tr>td {
+  vertical-align: top;
+}
+
+.dataTable.display td {
+	padding: 3px 10px;
+}
+.btn-nested {
+	padding: 2px 10px;
+}
+.btn-action {
+	font-weight: bold;
+	padding: 2px 10px;
+}
+.dropdown-menu .divider {
+	margin: 0px 0;
+}
+.dataTables_filter label {
+	margin-bottom: 0px; 
+}
+.dropdown-menu  {
+	 min-width: 0px; 
 }
 
 .alertify,

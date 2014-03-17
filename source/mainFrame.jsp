@@ -107,7 +107,7 @@
 
 						<thead>
 							<tr>
-								<th>Detail</th>
+								<th><!-- Detail --></th>
 								<th>BugId</th>
 								<th>Title</th>
 								<th>UserName</th>
@@ -144,7 +144,7 @@
 
 						<thead>
 							<tr>
-								<th>Detail</th>
+								<th><!-- Detail --></th>
 								<th>BugId</th>
 								<th>Title</th>
 								<th>UserName</th>

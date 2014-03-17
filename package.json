@@ -1,6 +1,6 @@
 {
   "name": "BugTrackingAdmin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The web admin client of bug trace system",
   "main": "index.js",
   "scripts": {
