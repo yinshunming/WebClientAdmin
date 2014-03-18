@@ -30787,8 +30787,8 @@ $.effects.effect.transfer = function( o, done ) {
 			 window.refresh_size = setTimeout(function() { update_size(); }, 150);
 	    }
 	    function  getBugInfoTable(bugInfo){
-			var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-			sOut += '<tr><td>Component:</td><td>'+bugInfo.component+'</td></tr>';
+			var sOut = '<table class="detailTable col-lg-12" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+			sOut += '<tr><td class="col-lg-1" >Component:</td><td class="col-lg-1">'+bugInfo.component+'</td></tr>';
 			sOut += '<tr><td>BugId:</td><td>'+bugInfo.bugId+'</td></tr>';
 			sOut += '<tr><td>Title:</td><td>'+bugInfo.title+'</td></tr>';
 			sOut += '<tr><td>Project:</td><td>'+bugInfo.project+'</td></tr>';

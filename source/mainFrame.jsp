@@ -48,6 +48,7 @@
 							</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
+					<li id="feedbackNav"><a href='http://10.158.2.124:8050/feedback/' >Feedback</a></li>
 					<li id="logoutNav"><a href="#">Logout</a></li>
 				</ul>		
 			</div>

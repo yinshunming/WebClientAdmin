@@ -1265,6 +1265,12 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 	 min-width: 0px; 
 }
 
+table.detailTable tr {
+	border-style: inset;
+	border-color: rgba(175, 174, 173, 0.7);
+	border-width: thin;
+}
+
 .alertify,
 .alertify-show,
 .alertify-log {
