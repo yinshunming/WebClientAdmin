@@ -30725,6 +30725,176 @@ $.effects.effect.transfer = function( o, done ) {
 
 })(jQuery);
 
+
+/**
+ * jQuery SHA1 hash algorithm function
+ * 
+ * 	<code>
+ * 		Calculate the sha1 hash of a String 
+ * 		String $.sha1 ( String str )
+ * 	</code>
+ * 
+ * Calculates the sha1 hash of str using the US Secure Hash Algorithm 1.
+ * SHA-1 the Secure Hash Algorithm (SHA) was developed by NIST and is specified in the Secure Hash Standard (SHS, FIPS 180).
+ * This script is used to process variable length message into a fixed-length output using the SHA-1 algorithm. It is fully compatible with UTF-8 encoding.
+ * If you plan using UTF-8 encoding in your project don't forget to set the page encoding to UTF-8 (Content-Type meta tag).
+ * This function orginally get from the WebToolkit and rewrite for using as the jQuery plugin.
+ * 
+ * Example
+ * 	Code
+ * 		<code>
+ * 			$.sha1("I'm Persian."); 
+ * 		</code>
+ * 	Result
+ * 		<code>
+ * 			"1d302f9dc925d62fc859055999d2052e274513ed"
+ * 		</code>
+ * 
+ * @alias Muhammad Hussein Fattahizadeh < muhammad [AT] semnanweb [DOT] com >
+ * @link http://www.semnanweb.com/jquery-plugin/sha1.html
+ * @see http://www.webtoolkit.info/
+ * @license http://www.gnu.org/licenses/gpl.html [GNU General Public License]
+ * @param {jQuery} {sha1:function(string))
+ * @return string
+ */
+
+(function($){
+	
+	var rotateLeft = function(lValue, iShiftBits) {
+		return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
+	}
+	
+	var lsbHex = function(value) {
+		var string = "";
+		var i;
+		var vh;
+		var vl;
+		for(i = 0;i <= 6;i += 2) {
+			vh = (value>>>(i * 4 + 4))&0x0f;
+			vl = (value>>>(i*4))&0x0f;
+			string += vh.toString(16) + vl.toString(16);
+		}
+		return string;
+	};
+	
+	var cvtHex = function(value) {
+		var string = "";
+		var i;
+		var v;
+		for(i = 7;i >= 0;i--) {
+			v = (value>>>(i * 4))&0x0f;
+			string += v.toString(16);
+		}
+		return string;
+	};
+	
+	var uTF8Encode = function(string) {
+		string = string.replace(/\x0d\x0a/g, "\x0a");
+		var output = "";
+		for (var n = 0; n < string.length; n++) {
+			var c = string.charCodeAt(n);
+			if (c < 128) {
+				output += String.fromCharCode(c);
+			} else if ((c > 127) && (c < 2048)) {
+				output += String.fromCharCode((c >> 6) | 192);
+				output += String.fromCharCode((c & 63) | 128);
+			} else {
+				output += String.fromCharCode((c >> 12) | 224);
+				output += String.fromCharCode(((c >> 6) & 63) | 128);
+				output += String.fromCharCode((c & 63) | 128);
+			}
+		}
+		return output;
+	};
+	
+	$.extend({
+		sha1: function(string) {
+			var blockstart;
+			var i, j;
+			var W = new Array(80);
+			var H0 = 0x67452301;
+			var H1 = 0xEFCDAB89;
+			var H2 = 0x98BADCFE;
+			var H3 = 0x10325476;
+			var H4 = 0xC3D2E1F0;
+			var A, B, C, D, E;
+			var tempValue;
+			string = uTF8Encode(string);
+			var stringLength = string.length;
+			var wordArray = new Array();
+			for(i = 0;i < stringLength - 3;i += 4) {
+				j = string.charCodeAt(i)<<24 | string.charCodeAt(i + 1)<<16 | string.charCodeAt(i + 2)<<8 | string.charCodeAt(i + 3);
+				wordArray.push(j);
+			}
+			switch(stringLength % 4) {
+				case 0:
+					i = 0x080000000;
+				break;
+				case 1:
+					i = string.charCodeAt(stringLength - 1)<<24 | 0x0800000;
+				break;
+				case 2:
+					i = string.charCodeAt(stringLength - 2)<<24 | string.charCodeAt(stringLength - 1)<<16 | 0x08000;
+				break;
+				case 3:
+					i = string.charCodeAt(stringLength - 3)<<24 | string.charCodeAt(stringLength - 2)<<16 | string.charCodeAt(stringLength - 1)<<8 | 0x80;
+				break;
+			}
+			wordArray.push(i);
+			while((wordArray.length % 16) != 14 ) wordArray.push(0);
+			wordArray.push(stringLength>>>29);
+			wordArray.push((stringLength<<3)&0x0ffffffff);
+			for(blockstart = 0;blockstart < wordArray.length;blockstart += 16) {
+				for(i = 0;i < 16;i++) W[i] = wordArray[blockstart+i];
+				for(i = 16;i <= 79;i++) W[i] = rotateLeft(W[i-3] ^ W[i-8] ^ W[i-14] ^ W[i-16], 1);
+				A = H0;
+				B = H1;
+				C = H2;
+				D = H3;
+				E = H4;
+				for(i = 0;i <= 19;i++) {
+					tempValue = (rotateLeft(A, 5) + ((B&C) | (~B&D)) + E + W[i] + 0x5A827999) & 0x0ffffffff;
+					E = D;
+					D = C;
+					C = rotateLeft(B, 30);
+					B = A;
+					A = tempValue;
+				}
+				for(i = 20;i <= 39;i++) {
+					tempValue = (rotateLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff;
+					E = D;
+					D = C;
+					C = rotateLeft(B, 30);
+					B = A;
+					A = tempValue;
+				}
+				for(i = 40;i <= 59;i++) {
+					tempValue = (rotateLeft(A, 5) + ((B&C) | (B&D) | (C&D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff;
+					E = D;
+					D = C;
+					C = rotateLeft(B, 30);
+					B = A;
+					A = tempValue;
+				}
+				for(i = 60;i <= 79;i++) {
+					tempValue = (rotateLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff;
+					E = D;
+					D = C;
+					C = rotateLeft(B, 30);
+					B = A;
+					A = tempValue;
+				}
+				H0 = (H0 + A) & 0x0ffffffff;
+				H1 = (H1 + B) & 0x0ffffffff;
+				H2 = (H2 + C) & 0x0ffffffff;
+				H3 = (H3 + D) & 0x0ffffffff;
+				H4 = (H4 + E) & 0x0ffffffff;
+			}
+			var tempValue = cvtHex(H0) + cvtHex(H1) + cvtHex(H2) + cvtHex(H3) + cvtHex(H4);
+			return tempValue.toLowerCase();
+		}
+	});
+})(jQuery);
 /*! alertify - v0.3.11 - 2013-10-08 */
 !function(a,b){"use strict";var c,d=a.document;c=function(){var c,e,f,g,h,i,j,k,l,m,n,o,p,q={},r={},s=!1,t={ENTER:13,ESC:27,SPACE:32},u=[];return r={buttons:{holder:'<nav class="alertify-buttons">{{buttons}}</nav>',submit:'<button type="submit" class="alertify-button alertify-button-ok" id="alertify-ok">{{ok}}</button>',ok:'<button class="alertify-button alertify-button-ok" id="alertify-ok">{{ok}}</button>',cancel:'<button class="alertify-button alertify-button-cancel" id="alertify-cancel">{{cancel}}</button>'},input:'<div class="alertify-text-wrapper"><input type="text" class="alertify-text" id="alertify-text"></div>',message:'<p class="alertify-message">{{message}}</p>',log:'<article class="alertify-log{{class}}">{{message}}</article>'},p=function(){var a,c,e=!1,f=d.createElement("fakeelement"),g={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"otransitionend",transition:"transitionend"};for(a in g)if(f.style[a]!==b){c=g[a],e=!0;break}return{type:c,supported:e}},c=function(a){return d.getElementById(a)},q={labels:{ok:"OK",cancel:"Cancel"},delay:5e3,buttonReverse:!1,buttonFocus:"ok",transition:b,addListeners:function(a){var b,c,i,j,k,l="undefined"!=typeof f,m="undefined"!=typeof e,n="undefined"!=typeof o,p="",q=this;b=function(b){return"undefined"!=typeof b.preventDefault&&b.preventDefault(),i(b),"undefined"!=typeof o&&(p=o.value),"function"==typeof a&&("undefined"!=typeof o?a(!0,p):a(!0)),!1},c=function(b){return"undefined"!=typeof b.preventDefault&&b.preventDefault(),i(b),"function"==typeof a&&a(!1),!1},i=function(){q.hide(),q.unbind(d.body,"keyup",j),q.unbind(g,"focus",k),l&&q.unbind(f,"click",b),m&&q.unbind(e,"click",c)},j=function(a){var d=a.keyCode;(d===t.SPACE&&!n||n&&d===t.ENTER)&&b(a),d===t.ESC&&m&&c(a)},k=function(){n?o.focus():!m||q.buttonReverse?f.focus():e.focus()},this.bind(g,"focus",k),this.bind(h,"focus",k),l&&this.bind(f,"click",b),m&&this.bind(e,"click",c),this.bind(d.body,"keyup",j),this.transition.supported||this.setFocus()},bind:function(a,b,c){"function"==typeof a.addEventListener?a.addEventListener(b,c,!1):a.attachEvent&&a.attachEvent("on"+b,c)},handleErrors:function(){if("undefined"!=typeof a.onerror){var b=this;return a.onerror=function(a,c,d){b.error("["+a+" on line "+d+" of "+c+"]",0)},!0}return!1},appendButtons:function(a,b){return this.buttonReverse?b+a:a+b},build:function(a){var b="",c=a.type,d=a.message,e=a.cssClass||"";switch(b+='<div class="alertify-dialog">',b+='<a id="alertify-resetFocusBack" class="alertify-resetFocus" href="#">Reset Focus</a>',"none"===q.buttonFocus&&(b+='<a href="#" id="alertify-noneFocus" class="alertify-hidden"></a>'),"prompt"===c&&(b+='<div id="alertify-form">'),b+='<article class="alertify-inner">',b+=r.message.replace("{{message}}",d),"prompt"===c&&(b+=r.input),b+=r.buttons.holder,b+="</article>","prompt"===c&&(b+="</div>"),b+='<a id="alertify-resetFocus" class="alertify-resetFocus" href="#">Reset Focus</a>',b+="</div>",c){case"confirm":b=b.replace("{{buttons}}",this.appendButtons(r.buttons.cancel,r.buttons.ok)),b=b.replace("{{ok}}",this.labels.ok).replace("{{cancel}}",this.labels.cancel);break;case"prompt":b=b.replace("{{buttons}}",this.appendButtons(r.buttons.cancel,r.buttons.submit)),b=b.replace("{{ok}}",this.labels.ok).replace("{{cancel}}",this.labels.cancel);break;case"alert":b=b.replace("{{buttons}}",r.buttons.ok),b=b.replace("{{ok}}",this.labels.ok)}return l.className="alertify alertify-"+c+" "+e,k.className="alertify-cover",b},close:function(a,b){var c,d,e=b&&!isNaN(b)?+b:this.delay,f=this;this.bind(a,"click",function(){c(a)}),d=function(a){a.stopPropagation(),f.unbind(this,f.transition.type,d),m.removeChild(this),m.hasChildNodes()||(m.className+=" alertify-logs-hidden")},c=function(a){"undefined"!=typeof a&&a.parentNode===m&&(f.transition.supported?(f.bind(a,f.transition.type,d),a.className+=" alertify-log-hide"):(m.removeChild(a),m.hasChildNodes()||(m.className+=" alertify-logs-hidden")))},0!==b&&setTimeout(function(){c(a)},e)},dialog:function(a,b,c,e,f){j=d.activeElement;var g=function(){m&&null!==m.scrollTop&&k&&null!==k.scrollTop||g()};if("string"!=typeof a)throw new Error("message must be a string");if("string"!=typeof b)throw new Error("type must be a string");if("undefined"!=typeof c&&"function"!=typeof c)throw new Error("fn must be a function");return this.init(),g(),u.push({type:b,message:a,callback:c,placeholder:e,cssClass:f}),s||this.setup(),this},extend:function(a){if("string"!=typeof a)throw new Error("extend method must have exactly one paramter");return function(b,c){return this.log(b,a,c),this}},hide:function(){var a,b=this;u.splice(0,1),u.length>0?this.setup(!0):(s=!1,a=function(c){c.stopPropagation(),b.unbind(l,b.transition.type,a)},this.transition.supported?(this.bind(l,this.transition.type,a),l.className="alertify alertify-hide alertify-hidden"):l.className="alertify alertify-hide alertify-hidden alertify-isHidden",k.className="alertify-cover alertify-cover-hidden",j.focus())},init:function(){d.createElement("nav"),d.createElement("article"),d.createElement("section"),null==c("alertify-cover")&&(k=d.createElement("div"),k.setAttribute("id","alertify-cover"),k.className="alertify-cover alertify-cover-hidden",d.body.appendChild(k)),null==c("alertify")&&(s=!1,u=[],l=d.createElement("section"),l.setAttribute("id","alertify"),l.className="alertify alertify-hidden",d.body.appendChild(l)),null==c("alertify-logs")&&(m=d.createElement("section"),m.setAttribute("id","alertify-logs"),m.className="alertify-logs alertify-logs-hidden",d.body.appendChild(m)),d.body.setAttribute("tabindex","0"),this.transition=p()},log:function(a,b,c){var d=function(){m&&null!==m.scrollTop||d()};return this.init(),d(),m.className="alertify-logs",this.notify(a,b,c),this},notify:function(a,b,c){var e=d.createElement("article");e.className="alertify-log"+("string"==typeof b&&""!==b?" alertify-log-"+b:""),e.innerHTML=a,m.appendChild(e),setTimeout(function(){e.className=e.className+" alertify-log-show"},50),this.close(e,c)},set:function(a){var b;if("object"!=typeof a&&a instanceof Array)throw new Error("args must be an object");for(b in a)a.hasOwnProperty(b)&&(this[b]=a[b])},setFocus:function(){o?(o.focus(),o.select()):i.focus()},setup:function(a){var d,j=u[0],k=this;s=!0,d=function(a){a.stopPropagation(),k.setFocus(),k.unbind(l,k.transition.type,d)},this.transition.supported&&!a&&this.bind(l,this.transition.type,d),l.innerHTML=this.build(j),g=c("alertify-resetFocus"),h=c("alertify-resetFocusBack"),f=c("alertify-ok")||b,e=c("alertify-cancel")||b,i="cancel"===q.buttonFocus?e:"none"===q.buttonFocus?c("alertify-noneFocus"):f,o=c("alertify-text")||b,n=c("alertify-form")||b,"string"==typeof j.placeholder&&""!==j.placeholder&&(o.value=j.placeholder),a&&this.setFocus(),this.addListeners(j.callback)},unbind:function(a,b,c){"function"==typeof a.removeEventListener?a.removeEventListener(b,c,!1):a.detachEvent&&a.detachEvent("on"+b,c)}},{alert:function(a,b,c){return q.dialog(a,"alert",b,"",c),this},confirm:function(a,b,c){return q.dialog(a,"confirm",b,"",c),this},extend:q.extend,init:q.init,log:function(a,b,c){return q.log(a,b,c),this},prompt:function(a,b,c,d){return q.dialog(a,"prompt",b,c,d),this},success:function(a,b){return q.log(a,"success",b),this},error:function(a,b){return q.log(a,"error",b),this},set:function(a){q.set(a)},labels:q.labels,debug:q.handleErrors}},"function"==typeof define?define([],function(){return new c}):"undefined"==typeof a.alertify&&(a.alertify=new c)}(this);
 	var userInfoDataTable;
@@ -30788,24 +30958,25 @@ $.effects.effect.transfer = function( o, done ) {
 	    }
 	    function  getBugInfoTable(bugInfo){
 			var sOut = '<table class="detailTable col-lg-12" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-			sOut += '<tr><td class="col-lg-1" >Component:</td><td class="col-lg-1">'+bugInfo.component+'</td></tr>';
-			sOut += '<tr><td>BugId:</td><td>'+bugInfo.bugId+'</td></tr>';
-			sOut += '<tr><td>Title:</td><td>'+bugInfo.title+'</td></tr>';
-			sOut += '<tr><td>Project:</td><td>'+bugInfo.project+'</td></tr>';
-			sOut += '<tr><td>Type:</td><td>'+bugInfo.type+'</td></tr>';
-			sOut += '<tr><td>Status:</td><td>'+bugInfo.status+'</td></tr>';
-			sOut += '<tr><td>Description:</td><td>'+bugInfo.description+'</td></tr>';
-			sOut += '<tr><td>Owner:</td><td>'+bugInfo.owner+'</td></tr>';
-			sOut += '<tr><td>Submitter:</td><td>'+bugInfo.submitter+'</td></tr>';
-			sOut += '<tr><td>SubmitData:</td><td>'+bugInfo.submitData+'</td></tr>';
-			sOut += '<tr><td>Severity:</td><td>'+bugInfo.severity+'</td></tr>';
-			sOut += '<tr><td>Tags:</td><td>'+bugInfo.tags+'</td></tr>';
-			sOut += '<tr><td>Regression:</td><td>'+bugInfo.regression+'</td></tr>';									
+			sOut += '<tr><td class="col-lg-1 detailFirstTd" >Component:</td><td class="col-lg-11">'+bugInfo.component+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">BugId:</td><td>'+bugInfo.bugId+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Title:</td><td>'+bugInfo.title+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Project:</td><td>'+bugInfo.project+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Type:</td><td>'+bugInfo.type+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Status:</td><td>'+bugInfo.status+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Description:</td><td>'+bugInfo.description+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Owner:</td><td>'+bugInfo.owner+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Submitter:</td><td>'+bugInfo.submitter+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">SubmitData:</td><td>'+bugInfo.submitData+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Severity:</td><td>'+bugInfo.severity+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Tags:</td><td>'+bugInfo.tags+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Regression:</td><td>'+bugInfo.regression+'</td></tr>';									
 			sOut += '</table>';
 			return sOut;
 	    }
 	
 	   function  updateUserInfo(value, settings){
+		    
 			var heads=$("#userInfoTable th");
 		    var index;
 		    var id;
@@ -30815,8 +30986,8 @@ $.effects.effect.transfer = function( o, done ) {
 		    var email;
 		    
 		    var nTr = $(this).parents('tr')[0];
-		    $.each(heads,function(n,value){
-		      var text=value.childNodes[0].childNodes[0].data;
+		    $.each(heads,function(n,Cell){
+		      var text=Cell.childNodes[0].childNodes[0].data;
 		      switch(text){
 			      case "ID":
 			    	  id=nTr.childNodes[n].childNodes[0].data; 
@@ -30832,6 +31003,7 @@ $.effects.effect.transfer = function( o, done ) {
 			      case "Password":
 			    	  if(nTr.childNodes[n].childNodes[0].nodeName.toUpperCase()=="FORM"){
 			    		  password=nTr.childNodes[n].childNodes[0].childNodes[0].value; 
+			    		  value = $.sha1(value).toUpperCase();
 			    	  }else {
 			    		  password=nTr.childNodes[n].childNodes[0].data; 
 			    	  }
@@ -31001,77 +31173,7 @@ $.effects.effect.transfer = function( o, done ) {
 				            ]
 					});	
 					
-					 userInfoDataTable.makeEditable({
-						 
-						 "aoColumns": [
-							              null,
-							              {
-							            	  cssclass:"required",
-							            	  indicator: 'Saving Username...',
-											  tooltip: 'Double click to modify user Name',
-											  loadtext: 'loading...',
-											 // type: 'text',
-											  onblur: 'submit',
-											  sUpdateURL: updateUserInfo,
-							              	},
-							              	{
-							             
-							            	  cssclass:"required minlength",
-							            	  indicator: 'Saving Password...',
-											  tooltip: 'Double click to modify password',
-											  loadtext: 'loading...',
-											 // type: 'text',
-											  onblur: 'submit',
-											  sUpdateURL: updateUserInfo,
-							              	},
-							              	{
-								            	  cssclass:"required",
-								            	  indicator: 'Saving Username...',
-												  tooltip: 'Double click to modify onebug full name',
-												  loadtext: 'loading...',
-												 // type: 'text',
-												  onblur: 'submit',
-												  sUpdateURL: updateUserInfo,
-							              	},
-							              	{
-								            	  cssclass:"required email",
-								            	  indicator: 'Saving Username...',
-												  tooltip: 'Double click to modify email',
-												  loadtext: 'loading...',
-												 // type: 'text',
-												  onblur: 'submit',
-												  sUpdateURL: updateUserInfo,
-								             }		
-							              	
-							              ],
-						
-						
-						/*sAddURL: "assets/other/blank.txt",
-             			sAddHttpMethod: "GET",
-             			sAddNewRowFormId: "userInfoForm",
-             			sAddNewRowButtonId: "addUserBtn",
-             			sAddNewRowOkButtonId: "addUserOkBtn",
-						sAddNewRowCancelButtonId: "addUserCancleBtn",	
-					    oAddNewRowButtonOptions: {	label: "Add...",
-										icons: {primary:'ui-icon-plus'} 
-						},
-						oAddNewRowFormOptions: { 	
-                            title: 'Add New User',
-							show: "blind",
-							hide: "explode",
-                            modal: true
-						}	,
-							*/
-			            sDeleteHttpMethod: "GET",
-                 		sDeleteURL: "assets/other/blank.txt",
-                 		fnOnDeleting: deleteUserInfo,
-		                sDeleteRowButtonId: "deleteUserBtn",	
-						oDeleteRowButtonOptions: {	
-							label: "Remove", 
-							icons: {primary:'ui-icon-trash'}
-						},							                
-		                sAddDeleteToolbarSelector: "#userInfoTable_length"
-					}); 
+					userTableMakeEditable();
 				},
 				complete : function(status) {
 					var addButton='<button data-toggle="modal" data-target="#addUserModal"  id="addUserBtn" class="add_row ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false"><span class="ui-button-icon-primary ui-icon ui-icon-plus"></span><span class="ui-button-text">Add...</span></button>';
@@ -31080,6 +31182,84 @@ $.effects.effect.transfer = function( o, done ) {
 			});
 	   }
 	
+	   function userTableMakeEditable(){
+			 userInfoDataTable.makeEditable({
+				 
+				 "aoColumns": [
+					              null,
+					              {
+					            	  cssclass:"required",
+					            	  indicator: 'Saving Username...',
+									  tooltip: 'Double click to modify user Name',
+									  loadtext: 'loading...',
+									 // type: 'text',
+									  onblur: 'submit',
+									  sUpdateURL: updateUserInfo,
+					              	},
+					              	{
+					             
+					            	  cssclass:"required minlength",
+					            	  indicator: 'Saving Password...',
+									  tooltip: 'Double click to modify password',
+									  loadtext: 'loading...',
+									 // type: 'text',
+									  onblur: 'submit',
+									 // submit: 'Ok',
+									  sUpdateURL: updateUserInfo,
+									  callback: function( sValue, settings){
+										  //prevent default function
+										  console.log("prevent default function");
+			                             }
+					              	},
+					              	{
+						            	  cssclass:"required",
+						            	  indicator: 'Saving OneBug Name...',
+										  tooltip: 'Double click to modify onebug full name',
+										  loadtext: 'loading...',
+										 // type: 'text',
+										  onblur: 'submit',
+										  sUpdateURL: updateUserInfo,
+					              	},
+					              	{
+						            	  cssclass:"required email",
+						            	  indicator: 'Saving Username...',
+										  tooltip: 'Double click to modify email',
+										  loadtext: 'loading...',
+										 // type: 'text',
+										  onblur: 'submit',
+										  sUpdateURL: updateUserInfo,
+						             }		
+					              	
+					              ],
+				
+				
+				/*sAddURL: "assets/other/blank.txt",
+     			sAddHttpMethod: "GET",
+     			sAddNewRowFormId: "userInfoForm",
+     			sAddNewRowButtonId: "addUserBtn",
+     			sAddNewRowOkButtonId: "addUserOkBtn",
+				sAddNewRowCancelButtonId: "addUserCancleBtn",	
+			    oAddNewRowButtonOptions: {	label: "Add...",
+								icons: {primary:'ui-icon-plus'} 
+				},
+				oAddNewRowFormOptions: { 	
+                    title: 'Add New User',
+					show: "blind",
+					hide: "explode",
+                    modal: true
+				}	,
+					*/
+	            sDeleteHttpMethod: "GET",
+         		sDeleteURL: "assets/other/blank.txt",
+         		fnOnDeleting: deleteUserInfo,
+                sDeleteRowButtonId: "deleteUserBtn",	
+				oDeleteRowButtonOptions: {	
+					label: "Remove", 
+					icons: {primary:'ui-icon-trash'}
+				},							                
+                sAddDeleteToolbarSelector: "#userInfoTable_length"
+			}); 
+	   }
 	   
 	   function updateUsersInfo(){
 		   userInfoDataTable.fnClearTable();
@@ -31207,7 +31387,7 @@ $.effects.effect.transfer = function( o, done ) {
 						//"bProcessing": true,
 						//"aaSorting": [[1, 'asc']],
 						"bDestroy": true,
-						"fnRowCallback":  truncatTextReder,
+						//"fnRowCallback":  truncatTextReder,
 						"aoColumnDefs": [
 											{ "bSortable": false, "aTargets": [ 0 ] }
 										], 
@@ -31377,7 +31557,7 @@ $.effects.effect.transfer = function( o, done ) {
 						//"bProcessing": true,
 						//"aaSorting": [[1, 'asc']],
 						"bDestroy": true,
-						"fnRowCallback":  truncatTextReder,
+						//"fnRowCallback":  truncatTextReder,
 						"aoColumnDefs": [
 											{ "bSortable": false, "aTargets": [ 0 ] }
 										], 
@@ -31813,7 +31993,11 @@ $.effects.effect.transfer = function( o, done ) {
 								var password=rowArray[1].value;
 								var oneBugName=rowArray[2].value;
 								var email=rowArray[3].value;
-								userInfoDataTable.fnAddData([id,userName,password,oneBugName,email]);
+								//encrpted password
+								var encryptedPassword = $.sha1(password);
+								//encryptedPassword=encryptedPassword.toUppercase();
+								userInfoDataTable.fnAddData([id,userName,encryptedPassword,oneBugName,email]);
+								userTableMakeEditable();
 								$("#addUserModal").modal('hide');
 								alertify.log(dataObj.message,"success");
 							},

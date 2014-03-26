@@ -403,7 +403,8 @@
 	<script src="assets/js/jquery.jeditable.js"></script>
 	<script src="assets/js/jquery.dataTables.rowGrouping.js"></script>
 	<script src="assets/js/jquery.dataTables.colReorderWithResize.js"></script>
-	<script src="assets/js/jquery-ui-1.10.4.custom.js"></script>	
+	<script src="assets/js/jquery-ui-1.10.4.custom.js"></script>
+	<script src="assets/js/jquery.sha1.js"></script>	
 	<script src="assets/js/alertify.min.js"></script>
 	<!-- <script src="assets/js/custom.navigation.js"></script> -->
 	<script src="assets/js/custom.mainFrame.js"></script>

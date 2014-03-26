@@ -66,6 +66,7 @@ module.exports = function(grunt) {
 												"source/assets/js/jquery.dataTables.rowGrouping.js",
 												"source/assets/js/jquery.dataTables.colReorderWithResize.js",
 												"source/assets/js/jquery-ui-1.10.4.custom.js",
+												"source/assets/js/jquery.sha1.js",
 												"source/assets/js/alertify.min.js",												
 												"source/assets/js/custom.mainFrame.js"
 											 ],
@@ -148,6 +149,7 @@ module.exports = function(grunt) {
 	  prod: {
 		files: [
 		  // includes files within path
+		  {expand: true, cwd:'source/assets/other/', src: ['**'], dest: 'WebRoot/assets/other/'},
 		  {expand: true, cwd:'source/assets/fonts/', src: ['**'], dest: 'WebRoot/assets/fonts/'},
 		  {expand: true, cwd:'source/assets/images/',src: ['**'], dest: 'WebRoot/assets/images/'},
 		  {expand: true, cwd:'source/META-INF/',src: ['**'], dest: 'WebRoot/META-INF/'},

@@ -59,24 +59,25 @@
 	    }
 	    function  getBugInfoTable(bugInfo){
 			var sOut = '<table class="detailTable col-lg-12" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-			sOut += '<tr><td class="col-lg-1" >Component:</td><td class="col-lg-1">'+bugInfo.component+'</td></tr>';
-			sOut += '<tr><td>BugId:</td><td>'+bugInfo.bugId+'</td></tr>';
-			sOut += '<tr><td>Title:</td><td>'+bugInfo.title+'</td></tr>';
-			sOut += '<tr><td>Project:</td><td>'+bugInfo.project+'</td></tr>';
-			sOut += '<tr><td>Type:</td><td>'+bugInfo.type+'</td></tr>';
-			sOut += '<tr><td>Status:</td><td>'+bugInfo.status+'</td></tr>';
-			sOut += '<tr><td>Description:</td><td>'+bugInfo.description+'</td></tr>';
-			sOut += '<tr><td>Owner:</td><td>'+bugInfo.owner+'</td></tr>';
-			sOut += '<tr><td>Submitter:</td><td>'+bugInfo.submitter+'</td></tr>';
-			sOut += '<tr><td>SubmitData:</td><td>'+bugInfo.submitData+'</td></tr>';
-			sOut += '<tr><td>Severity:</td><td>'+bugInfo.severity+'</td></tr>';
-			sOut += '<tr><td>Tags:</td><td>'+bugInfo.tags+'</td></tr>';
-			sOut += '<tr><td>Regression:</td><td>'+bugInfo.regression+'</td></tr>';									
+			sOut += '<tr><td class="col-lg-1 detailFirstTd" >Component:</td><td class="col-lg-11">'+bugInfo.component+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">BugId:</td><td>'+bugInfo.bugId+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Title:</td><td>'+bugInfo.title+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Project:</td><td>'+bugInfo.project+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Type:</td><td>'+bugInfo.type+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Status:</td><td>'+bugInfo.status+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Description:</td><td>'+bugInfo.description+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Owner:</td><td>'+bugInfo.owner+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Submitter:</td><td>'+bugInfo.submitter+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">SubmitData:</td><td>'+bugInfo.submitData+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Severity:</td><td>'+bugInfo.severity+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Tags:</td><td>'+bugInfo.tags+'</td></tr>';
+			sOut += '<tr><td class="detailFirstTd">Regression:</td><td>'+bugInfo.regression+'</td></tr>';									
 			sOut += '</table>';
 			return sOut;
 	    }
 	
 	   function  updateUserInfo(value, settings){
+		    
 			var heads=$("#userInfoTable th");
 		    var index;
 		    var id;
@@ -86,8 +87,8 @@
 		    var email;
 		    
 		    var nTr = $(this).parents('tr')[0];
-		    $.each(heads,function(n,value){
-		      var text=value.childNodes[0].childNodes[0].data;
+		    $.each(heads,function(n,Cell){
+		      var text=Cell.childNodes[0].childNodes[0].data;
 		      switch(text){
 			      case "ID":
 			    	  id=nTr.childNodes[n].childNodes[0].data; 
@@ -103,6 +104,7 @@
 			      case "Password":
 			    	  if(nTr.childNodes[n].childNodes[0].nodeName.toUpperCase()=="FORM"){
 			    		  password=nTr.childNodes[n].childNodes[0].childNodes[0].value; 
+			    		  value = $.sha1(value).toUpperCase();
 			    	  }else {
 			    		  password=nTr.childNodes[n].childNodes[0].data; 
 			    	  }
@@ -272,77 +274,7 @@
 				            ]
 					});	
 					
-					 userInfoDataTable.makeEditable({
-						 
-						 "aoColumns": [
-							              null,
-							              {
-							            	  cssclass:"required",
-							            	  indicator: 'Saving Username...',
-											  tooltip: 'Double click to modify user Name',
-											  loadtext: 'loading...',
-											 // type: 'text',
-											  onblur: 'submit',
-											  sUpdateURL: updateUserInfo,
-							              	},
-							              	{
-							             
-							            	  cssclass:"required minlength",
-							            	  indicator: 'Saving Password...',
-											  tooltip: 'Double click to modify password',
-											  loadtext: 'loading...',
-											 // type: 'text',
-											  onblur: 'submit',
-											  sUpdateURL: updateUserInfo,
-							              	},
-							              	{
-								            	  cssclass:"required",
-								            	  indicator: 'Saving Username...',
-												  tooltip: 'Double click to modify onebug full name',
-												  loadtext: 'loading...',
-												 // type: 'text',
-												  onblur: 'submit',
-												  sUpdateURL: updateUserInfo,
-							              	},
-							              	{
-								            	  cssclass:"required email",
-								            	  indicator: 'Saving Username...',
-												  tooltip: 'Double click to modify email',
-												  loadtext: 'loading...',
-												 // type: 'text',
-												  onblur: 'submit',
-												  sUpdateURL: updateUserInfo,
-								             }		
-							              	
-							              ],
-						
-						
-						/*sAddURL: "assets/other/blank.txt",
-             			sAddHttpMethod: "GET",
-             			sAddNewRowFormId: "userInfoForm",
-             			sAddNewRowButtonId: "addUserBtn",
-             			sAddNewRowOkButtonId: "addUserOkBtn",
-						sAddNewRowCancelButtonId: "addUserCancleBtn",	
-					    oAddNewRowButtonOptions: {	label: "Add...",
-										icons: {primary:'ui-icon-plus'} 
-						},
-						oAddNewRowFormOptions: { 	
-                            title: 'Add New User',
-							show: "blind",
-							hide: "explode",
-                            modal: true
-						}	,
-							*/
-			            sDeleteHttpMethod: "GET",
-                 		sDeleteURL: "assets/other/blank.txt",
-                 		fnOnDeleting: deleteUserInfo,
-		                sDeleteRowButtonId: "deleteUserBtn",	
-						oDeleteRowButtonOptions: {	
-							label: "Remove", 
-							icons: {primary:'ui-icon-trash'}
-						},							                
-		                sAddDeleteToolbarSelector: "#userInfoTable_length"
-					}); 
+					userTableMakeEditable();
 				},
 				complete : function(status) {
 					var addButton='<button data-toggle="modal" data-target="#addUserModal"  id="addUserBtn" class="add_row ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false"><span class="ui-button-icon-primary ui-icon ui-icon-plus"></span><span class="ui-button-text">Add...</span></button>';
@@ -351,6 +283,84 @@
 			});
 	   }
 	
+	   function userTableMakeEditable(){
+			 userInfoDataTable.makeEditable({
+				 
+				 "aoColumns": [
+					              null,
+					              {
+					            	  cssclass:"required",
+					            	  indicator: 'Saving Username...',
+									  tooltip: 'Double click to modify user Name',
+									  loadtext: 'loading...',
+									 // type: 'text',
+									  onblur: 'submit',
+									  sUpdateURL: updateUserInfo,
+					              	},
+					              	{
+					             
+					            	  cssclass:"required minlength",
+					            	  indicator: 'Saving Password...',
+									  tooltip: 'Double click to modify password',
+									  loadtext: 'loading...',
+									 // type: 'text',
+									  onblur: 'submit',
+									 // submit: 'Ok',
+									  sUpdateURL: updateUserInfo,
+									  callback: function( sValue, settings){
+										  //prevent default function
+										  console.log("prevent default function");
+			                             }
+					              	},
+					              	{
+						            	  cssclass:"required",
+						            	  indicator: 'Saving OneBug Name...',
+										  tooltip: 'Double click to modify onebug full name',
+										  loadtext: 'loading...',
+										 // type: 'text',
+										  onblur: 'submit',
+										  sUpdateURL: updateUserInfo,
+					              	},
+					              	{
+						            	  cssclass:"required email",
+						            	  indicator: 'Saving Username...',
+										  tooltip: 'Double click to modify email',
+										  loadtext: 'loading...',
+										 // type: 'text',
+										  onblur: 'submit',
+										  sUpdateURL: updateUserInfo,
+						             }		
+					              	
+					              ],
+				
+				
+				/*sAddURL: "assets/other/blank.txt",
+     			sAddHttpMethod: "GET",
+     			sAddNewRowFormId: "userInfoForm",
+     			sAddNewRowButtonId: "addUserBtn",
+     			sAddNewRowOkButtonId: "addUserOkBtn",
+				sAddNewRowCancelButtonId: "addUserCancleBtn",	
+			    oAddNewRowButtonOptions: {	label: "Add...",
+								icons: {primary:'ui-icon-plus'} 
+				},
+				oAddNewRowFormOptions: { 	
+                    title: 'Add New User',
+					show: "blind",
+					hide: "explode",
+                    modal: true
+				}	,
+					*/
+	            sDeleteHttpMethod: "GET",
+         		sDeleteURL: "assets/other/blank.txt",
+         		fnOnDeleting: deleteUserInfo,
+                sDeleteRowButtonId: "deleteUserBtn",	
+				oDeleteRowButtonOptions: {	
+					label: "Remove", 
+					icons: {primary:'ui-icon-trash'}
+				},							                
+                sAddDeleteToolbarSelector: "#userInfoTable_length"
+			}); 
+	   }
 	   
 	   function updateUsersInfo(){
 		   userInfoDataTable.fnClearTable();
@@ -478,7 +488,7 @@
 						//"bProcessing": true,
 						//"aaSorting": [[1, 'asc']],
 						"bDestroy": true,
-						"fnRowCallback":  truncatTextReder,
+						//"fnRowCallback":  truncatTextReder,
 						"aoColumnDefs": [
 											{ "bSortable": false, "aTargets": [ 0 ] }
 										], 
@@ -648,7 +658,7 @@
 						//"bProcessing": true,
 						//"aaSorting": [[1, 'asc']],
 						"bDestroy": true,
-						"fnRowCallback":  truncatTextReder,
+						//"fnRowCallback":  truncatTextReder,
 						"aoColumnDefs": [
 											{ "bSortable": false, "aTargets": [ 0 ] }
 										], 
@@ -1084,7 +1094,11 @@
 								var password=rowArray[1].value;
 								var oneBugName=rowArray[2].value;
 								var email=rowArray[3].value;
-								userInfoDataTable.fnAddData([id,userName,password,oneBugName,email]);
+								//encrpted password
+								var encryptedPassword = $.sha1(password);
+								//encryptedPassword=encryptedPassword.toUppercase();
+								userInfoDataTable.fnAddData([id,userName,encryptedPassword,oneBugName,email]);
+								userTableMakeEditable();
 								$("#addUserModal").modal('hide');
 								alertify.log(dataObj.message,"success");
 							},

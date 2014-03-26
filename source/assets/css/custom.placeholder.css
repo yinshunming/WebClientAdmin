@@ -38,8 +38,11 @@
 	 min-width: 0px; 
 }
 
-table.detailTable tr {
+table.detailTable td {
 	border-style: inset;
 	border-color: rgba(175, 174, 173, 0.7);
 	border-width: thin;
+}
+.detailFirstTd {
+	font-weight :bold;
 }
